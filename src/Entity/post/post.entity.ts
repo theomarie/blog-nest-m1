@@ -1,5 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne } from 'typeorm';
 import { AuthorEntity } from '../author/author.entity';
+import { CommentEntity } from '../comment/comment.entity';
+import { TagEntity } from '../tag/tag.entity';
+
 
 @Entity()
 export class PostEntity {
@@ -18,6 +21,12 @@ export class PostEntity {
    @Column()
    date: Date;
 
-//    @OneToOne(type => AuthorEntity, author => author.id)
-//     balance: AuthorEntity;
+   @ManyToOne(type => AuthorEntity, author => author.id)
+    author: AuthorEntity;
+
+    @ManyToOne(type => CommentEntity, comment => comment.id)
+    comment: CommentEntity;
+
+    @ManyToOne(type => TagEntity, tag => tag.id)
+    tag: TagEntity;
 }
