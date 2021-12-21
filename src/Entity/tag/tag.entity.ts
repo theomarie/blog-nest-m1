@@ -1,24 +1,18 @@
-<<<<<<< HEAD
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-=======
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
->>>>>>> 67ab61dfa7981a8794820b29c0bb09d041c72df7
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from "typeorm";
+import { PostEntity } from "../post/post.entity";
 
 @Entity()
 export class TagEntity {
 
-<<<<<<< HEAD
-   
-}
-=======
 @PrimaryGeneratedColumn()
 id: number;
 
 @Column()
 name: string;
 
+@ManyToMany(type => PostEntity, post => post.id)
+post: PostEntity;
 
 }
 
 
->>>>>>> 67ab61dfa7981a8794820b29c0bb09d041c72df7
