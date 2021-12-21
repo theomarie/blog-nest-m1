@@ -61,13 +61,24 @@ $ npm run test:cov
 # MLDR 
 ![image](https://user-images.githubusercontent.com/34074097/146948718-07570026-41f9-403e-b7c3-144003998de1.png)
 
-# ORM
-Install typeorm globally with npm i -g typeorm. You can also choose to use npx typeorm <params> for each command if you prefer not having to install it.
-  
-  Add typeorm command under scripts section in package.json
+## Migration
 
-"scripts": {
-    ...
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
-}
+```bash
+# Créer une nouvelle migration
+$ typeorm migration:create -n UserMigration
 
+# Générer une migration à partir du schéma de table existant
+$ typeorm migration:generate -n UserMigration
+
+# Run migrations
+$ typeorm migration:run
+
+# Revert migrations 
+$ typeorm migration:revert
+
+# Show migrations 
+$ typeorm migration:show
+
+# Synchroniser le schéma de la base de données 
+$typeorm schema:sync
+```
