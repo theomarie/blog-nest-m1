@@ -14,7 +14,7 @@ export class CommentEntity {
 
     @Column()
     point: number;
-
+    
 }
 
 
