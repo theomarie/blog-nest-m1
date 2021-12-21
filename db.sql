@@ -8,19 +8,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema nestBlog
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema nestBlog
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `nestBlog` DEFAULT CHARACTER SET utf8 ;
+USE `nestBlog` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`author`
+-- Table `nestBlog`.`author`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`author` (
+CREATE TABLE IF NOT EXISTS `nestBlog`.`author` (
   `idauthor` INT NOT NULL,
   `nom` VARCHAR(45) NULL,
   `prenom` VARCHAR(45) NULL,
@@ -30,9 +30,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`comment`
+-- Table `nestBlog`.`comment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`comment` (
+CREATE TABLE IF NOT EXISTS `nestBlog`.`comment` (
   `idcomment` INT NOT NULL,
   `content` VARCHAR(140) NOT NULL,
   `author_id` INT NOT NULL,
@@ -40,16 +40,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`comment` (
   INDEX `fk_comment_author1_idx` (`author_id` ASC) VISIBLE,
   CONSTRAINT `fk_comment_author1`
     FOREIGN KEY (`author_id`)
-    REFERENCES `mydb`.`author` (`idauthor`)
+    REFERENCES `nestBlog`.`author` (`idauthor`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`post`
+-- Table `nestBlog`.`post`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`post` (
+CREATE TABLE IF NOT EXISTS `nestBlog`.`post` (
   `idpost` INT NOT NULL,
   `title` VARCHAR(70) NOT NULL,
   `subtitle` VARCHAR(65) NULL,
@@ -62,21 +62,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`post` (
   INDEX `fk_post_comment1_idx` (`comment_id` ASC) VISIBLE,
   CONSTRAINT `fk_post_author`
     FOREIGN KEY (`author_id`)
-    REFERENCES `mydb`.`author` (`idauthor`)
+    REFERENCES `nestBlog`.`author` (`idauthor`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_post_comment1`
     FOREIGN KEY (`comment_id`)
-    REFERENCES `mydb`.`comment` (`idcomment`)
+    REFERENCES `nestBlog`.`comment` (`idcomment`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`tag`
+-- Table `nestBlog`.`tag`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`tag` (
+CREATE TABLE IF NOT EXISTS `nestBlog`.`tag` (
   `idtag` INT NOT NULL,
   `name` VARCHAR(45) NULL,
   PRIMARY KEY (`idtag`))
@@ -84,9 +84,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`post_tag`
+-- Table `nestBlog`.`post_tag`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`post_tag` (
+CREATE TABLE IF NOT EXISTS `nestBlog`.`post_tag` (
   `post_id` INT NOT NULL,
   `tag_id` INT NOT NULL,
   PRIMARY KEY (`post_id`, `tag_id`),
@@ -94,12 +94,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`post_tag` (
   INDEX `fk_post_has_tag_post1_idx` (`post_id` ASC) VISIBLE,
   CONSTRAINT `fk_post_has_tag_post1`
     FOREIGN KEY (`post_id`)
-    REFERENCES `mydb`.`post` (`idpost`)
+    REFERENCES `nestBlog`.`post` (`idpost`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_post_has_tag_tag1`
     FOREIGN KEY (`tag_id`)
-    REFERENCES `mydb`.`tag` (`idtag`)
+    REFERENCES `nestBlog`.`tag` (`idtag`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
