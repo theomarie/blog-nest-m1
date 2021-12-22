@@ -4,6 +4,7 @@ import { CommentDto } from 'src/dtos/comment.dto';
 import { PostDto } from 'src/dtos/post.dto';
 import { CommentEntity } from 'src/Entity/comment/comment.entity';
 import { PostEntity } from 'src/Entity/post/post.entity';
+import { TagEntity } from 'src/Entity/tag/tag.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -12,7 +13,9 @@ export class BlogService {
         @InjectRepository(PostEntity)
         private readonly postsRepository: Repository<PostEntity>,
         @InjectRepository(CommentEntity)
-        private readonly commentsRepository: Repository<CommentEntity>
+        private readonly commentsRepository: Repository<CommentEntity>,
+        @InjectRepository(TagEntity)
+        private readonly tagsRepository: Repository<TagEntity>
     ){}
 
     getPosts(){
@@ -40,4 +43,25 @@ export class BlogService {
         comment.post = post
         return this.commentsRepository.save(comment);
     }
+
+    async addTag(name:string){
+        let tag = new TagEntity();
+        tag.name = name;
+        tag = await this.tagsRepository.save(tag);
+        if(tag)
+            return tag;
+        return null;    
+    }
+
+    async tagArticle(postId, tagId){
+        const post = await this.postsRepository.findOne(postId, {relations: ['tags']});
+        if(!post)
+            return null;
+        const tag = await this.tagsRepository.findOne(tagId);
+        if(!tag)
+            return null;
+        post.tags.push(tag);
+        await this.postsRepository.save(post);
+        return this.postsRepository.findOne(postId, {relations: ['tags', 'comments']});
+    }   
 }

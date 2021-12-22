@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, OneToMany, ManyToMany, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, OneToMany, ManyToMany, CreateDateColumn, JoinTable } from 'typeorm';
 import { AuthorEntity } from '../author/author.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { TagEntity } from '../tag/tag.entity';
@@ -30,6 +30,7 @@ export class PostEntity {
     @OneToMany(type => CommentEntity, comment => comment.post, {onDelete: 'CASCADE'})
     comments: CommentEntity[];
 
-    @ManyToMany(type => TagEntity, tag => tag.post)
+    @ManyToMany(type => TagEntity)
+    @JoinTable({name : 'posts_tags'})
     tags: TagEntity[];
 }

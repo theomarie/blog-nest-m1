@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Patch, Post } from '@nestjs/common';
 import { CommentDto } from 'src/dtos/comment.dto';
 import { PostDto } from 'src/dtos/post.dto';
 import { BlogService } from './blog.service';
@@ -35,6 +35,22 @@ export class BlogController {
         const comment = await this.blogService.addComment(postId, commentDto);
         if(comment)
             return comment;
+        throw new HttpException('Not modified', HttpStatus.NOT_MODIFIED);
+    }
+
+    @Post('tag/:tagName')
+    async addTag(@Param(':tagName') tagName){
+        const tag = await this.blogService.addTag(tagName);
+        if(tag)
+            return tag;
+        throw new HttpException('Not modified', HttpStatus.NOT_MODIFIED);
+    }
+
+    @Patch(':postId/tag/:tagId')
+    async tagArticle(@Param('postId') postId: number, @Param('tagId') tagId: number){
+        const post = await this.blogService.tagArticle(postId, tagId);
+        if(post)
+            return post;
         throw new HttpException('Not modified', HttpStatus.NOT_MODIFIED);
     }
 

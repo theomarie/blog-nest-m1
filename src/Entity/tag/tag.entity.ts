@@ -11,8 +11,6 @@ import {PostEntity} from "../post/post.entity";
         name: string;
 
         @ManyToMany(type => PostEntity, post => post.tags)
-        @JoinTable()
-
         post: PostEntity;
 
     }
