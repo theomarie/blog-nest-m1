@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Logger, Param, Patch, Post, Put } from '@nestjs/common';
 import { CommentDto } from 'src/dtos/comment.dto';
 import { PostDto } from 'src/dtos/post.dto';
 import { BlogService } from './blog.service';
@@ -23,15 +23,31 @@ export class BlogController {
 
     @Post()
     async createPost(@Body() postDto: PostDto){
+        Logger.log(postDto, "POSTTTTTTT");
         const post = await this.blogService.createPost(postDto);
-        Logger.log(postDto);
         if(post)
             return post;
         throw new HttpException('Not Created', HttpStatus.NOT_MODIFIED);
     }
 
+    @Put(':postId')
+    async updatePost(@Param('postId') postId, @Body() postDto: PostDto){
+        const post = await this.blogService.updatePost(postId,postDto);
+        if(post)
+            return post;
+        throw new HttpException('Not Modified ', HttpStatus.NOT_MODIFIED);
+    }
+
+    @Delete(':postId')
+    async removePost(@Param('postId') postId){
+        const post = await this.blogService.removePost(postId);
+        if(post)
+            return post;
+        throw new HttpException('Not Found ', HttpStatus.NOT_FOUND);
+    }
+
     @Post('comment/:postId')
-    async addComment(@Param(':postId') postId, @Body() commentDto: CommentDto){
+    async addComment(@Param('postId') postId, @Body() commentDto: CommentDto){
         const comment = await this.blogService.addComment(postId, commentDto);
         if(comment)
             return comment;
@@ -39,7 +55,7 @@ export class BlogController {
     }
 
     @Post('tag/:tagName')
-    async addTag(@Param(':tagName') tagName){
+    async addTag(@Param('tagName') tagName){
         const tag = await this.blogService.addTag(tagName);
         if(tag)
             return tag;

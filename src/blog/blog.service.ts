@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentDto } from 'src/dtos/comment.dto';
 import { PostDto } from 'src/dtos/post.dto';
-import { CommentEntity } from 'src/Entity/comment/comment.entity';
-import { PostEntity } from 'src/Entity/post/post.entity';
-import { TagEntity } from 'src/Entity/tag/tag.entity';
+import { PostEntity } from 'src/blog/entities/post/post.entity';
+import { TagEntity } from 'src/blog/entities/tag/tag.entity';
 import { Repository } from 'typeorm';
+import { CommentEntity } from './entities/comment/comment.entity';
 
 @Injectable()
 export class BlogService {
@@ -31,6 +31,24 @@ export class BlogService {
 
     async createPost(postDto: PostDto){
         const post = await this.postsRepository.save(postDto);
+        if(post)
+            return post;
+        return null;
+    }
+
+    async updatePost(postId: number, postDto: PostDto){
+        const post = await this.postsRepository.findOne(postId);
+        if(!post)
+            return null;
+        await this.postsRepository.update(postId, postDto);
+        return await this.postsRepository.findOne(postId);
+    }
+
+    async removePost(postId: number){
+        const post = await this.postsRepository.findOne(postId);
+        if(!post)
+            return null;
+        this.postsRepository.remove(post);
         return post;
     }
 

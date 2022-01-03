@@ -1,7 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, OneToMany, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from "typeorm";
 import { AuthorEntity } from "../author/author.entity";
 import { PostEntity } from "../post/post.entity";
-import { TagEntity } from "../tag/tag.entity";
 
 @Entity('comments')
 export class CommentEntity {
@@ -12,16 +11,16 @@ export class CommentEntity {
     @CreateDateColumn()
     createdAt: Date;
 
-    @Column()
+    @Column('text')
     content: string;
 
-    @Column({ type:'int', default: 0 })
-    likes:number;
+    @Column({ type:'int', default: 1 })
+    points: number;
     
     @ManyToOne(type => AuthorEntity, author => author.comment)
     author: AuthorEntity;
 
-    @OneToMany(type => PostEntity, post => post.comments)
+    @ManyToOne(type => PostEntity, post => post.comments, {onDelete: 'CASCADE'})
     post: PostEntity;
 }
 

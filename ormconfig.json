@@ -1,16 +1,12 @@
 [
     {
-      "name": "default",
-      "type": "postgres",
+      "type": "mysql",
       "host": "localhost",
-      "port": 5432,
-      "username": <username>,
-      "password": <password>,
-      "database": "demo",
-      "entities": ["dist/**/*.entity{ .ts,.js}"],
-      "synchronize": false,
-      "migrations": ["dist/migrations/*{.ts,.js}"],
-      "migrationsTableName": "migrations_typeorm",
-      "migrationsRun": true
+      "username": "root",
+      "password": null,
+      "database": "nestblog",
+      "entities": ["dist/**/*.entity.js"],
+      "synchronize": true,
+      "logging": true
     }
   ]

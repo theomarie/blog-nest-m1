@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, OneToMany, ManyToMany, CreateDateColumn, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, CreateDateColumn, JoinTable } from 'typeorm';
 import { AuthorEntity } from '../author/author.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { TagEntity } from '../tag/tag.entity';
@@ -18,16 +18,13 @@ export class PostEntity {
     @Column()
     image: string;
 
-    @Column({ type:'int', default: 0 })
-    likes:number;
-
     @CreateDateColumn()
     createdAt: Date;
 
     @ManyToOne(type => AuthorEntity, author => author.post)
     author: AuthorEntity;
 
-    @OneToMany(type => CommentEntity, comment => comment.post, {onDelete: 'CASCADE'})
+    @OneToMany(type => CommentEntity, comment => comment.post)
     comments: CommentEntity[];
 
     @ManyToMany(type => TagEntity)
