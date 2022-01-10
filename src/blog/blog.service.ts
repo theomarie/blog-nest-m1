@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentDto } from 'src/dtos/comment.dto';
 import { PostDto } from 'src/dtos/post.dto';
@@ -23,7 +23,7 @@ export class BlogService {
     }
 
     async getOnePost(postId: number){
-        const post = await this.postsRepository.findOne(postId);
+        const post = await this.postsRepository.findOne(postId, {relations: ['comments']});
         if(post)
             return post;
         return null;
@@ -59,6 +59,16 @@ export class BlogService {
         const comment = new CommentEntity();
         comment.content = commentDto.content;
         comment.post = post
+        return this.commentsRepository.save(comment);
+    }
+
+    async incrementPointsComment(commentId, commentDto: CommentDto){
+        const comment = await this.commentsRepository.findOne(commentId);
+        Logger.log(comment);
+        if(!comment)
+            return null;
+        comment.content = commentDto.content;
+        comment.points = comment.points+1;
         return this.commentsRepository.save(comment);
     }
 

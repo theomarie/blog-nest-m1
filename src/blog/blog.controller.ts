@@ -23,7 +23,6 @@ export class BlogController {
 
     @Post()
     async createPost(@Body() postDto: PostDto){
-        Logger.log(postDto, "POSTTTTTTT");
         const post = await this.blogService.createPost(postDto);
         if(post)
             return post;
@@ -49,6 +48,14 @@ export class BlogController {
     @Post('comment/:postId')
     async addComment(@Param('postId') postId, @Body() commentDto: CommentDto){
         const comment = await this.blogService.addComment(postId, commentDto);
+        if(comment)
+            return comment;
+        throw new HttpException('Not modified', HttpStatus.NOT_MODIFIED);
+    }
+
+    @Put('comment/point/:commentId')
+    async incrementPointsComment(@Param('commentId') commentId, @Body() commentDto: CommentDto){
+        const comment = await this.blogService.incrementPointsComment(commentId, commentDto);
         if(comment)
             return comment;
         throw new HttpException('Not modified', HttpStatus.NOT_MODIFIED);
