@@ -1,11 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentDto } from 'src/dtos/comment.dto';
-import { PostDto } from 'src/dtos/post.dto';
 import { PostEntity } from 'src/blog/entities/post/post.entity';
 import { TagEntity } from 'src/blog/entities/tag/tag.entity';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, Repository } from 'typeorm';
 import { CommentEntity } from './entities/comment/comment.entity';
+import { AuthorEntity } from './entities/author/author.entity';
+import { PostDto } from 'src/dtos/post.dto';
+import { AuthorDto } from 'src/dtos/author.dto';
 
 @Injectable()
 export class BlogService {
@@ -14,25 +16,39 @@ export class BlogService {
         private readonly postsRepository: Repository<PostEntity>,
         @InjectRepository(CommentEntity)
         private readonly commentsRepository: Repository<CommentEntity>,
+        @InjectRepository(AuthorEntity)
+        private readonly authorsRepository: Repository<AuthorEntity>,
         @InjectRepository(TagEntity)
         private readonly tagsRepository: Repository<TagEntity>
     ){}
 
     getPosts(){
-        return this.postsRepository.find({relations: ['comments']});
+        return this.postsRepository.find({relations: ['comments', 'author']});
+    }
+
+    getAuthors(){
+        return this.authorsRepository.find({relations: ['post', 'comment']});
     }
 
     async getOnePost(postId: number){
-        const post = await this.postsRepository.findOne(postId, {relations: ['comments']});
+        const post = await this.postsRepository.findOne(postId, {relations: ['comments','comments.author', "author"]});
         if(post)
             return post;
         return null;
     }
 
     async createPost(postDto: PostDto){
+        Logger.log(postDto.author)
         const post = await this.postsRepository.save(postDto);
         if(post)
             return post;
+        return null;
+    }
+
+    async createAuthor(authorDto: AuthorDto){
+        const author = await this.authorsRepository.save(authorDto);
+        if(author)
+            return author;
         return null;
     }
 
@@ -53,11 +69,12 @@ export class BlogService {
     }
 
     async addComment(postID, commentDto: CommentDto){
-        const post = await this.postsRepository.findOne(postID, {relations: ['comments']});
+        const post = await this.postsRepository.findOne(postID, {relations: ['comments', 'author']});
         if(!post)
             return null;
         const comment = new CommentEntity();
         comment.content = commentDto.content;
+        comment.author = commentDto.author;
         comment.post = post
         return this.commentsRepository.save(comment);
     }

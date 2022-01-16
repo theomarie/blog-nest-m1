@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Logger, Param, Patch, Post, Put } from '@nestjs/common';
+import { AuthorDto } from 'src/dtos/author.dto';
 import { CommentDto } from 'src/dtos/comment.dto';
 import { PostDto } from 'src/dtos/post.dto';
 import { BlogService } from './blog.service';
@@ -11,6 +12,11 @@ export class BlogController {
     @Get()
     getAll(){
       return this.blogService.getPosts();
+    }
+
+    @Get("/authors")
+    getAllAuthors(){
+      return this.blogService.getAuthors();
     }
 
     @Get(':postId')
@@ -26,6 +32,14 @@ export class BlogController {
         const post = await this.blogService.createPost(postDto);
         if(post)
             return post;
+        throw new HttpException('Not Created', HttpStatus.NOT_MODIFIED);
+    }
+
+    @Post("author")
+    async createAuthor(@Body() authorDto: AuthorDto){
+        const author = await this.blogService.createAuthor(authorDto);
+        if(author)
+            return author;
         throw new HttpException('Not Created', HttpStatus.NOT_MODIFIED);
     }
 
